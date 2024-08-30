@@ -1,0 +1,16 @@
+examen
+horario
+picoyplaca
+roles
+vehiculo
+
+admin
+conductor
+aprendiz
+
+curso- min-max-clases-hora 2 o 4
+moto a2-curso-15 horas
+
+MODULOS
+CONFIGURACION
+PRACTICA
