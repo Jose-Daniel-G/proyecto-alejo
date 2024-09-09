@@ -37,20 +37,20 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        $task = new Task;
-        $task->title = $request['title'];
-        $task->description = $request['description'];
-        $title = $request->title;
+        // Validar los datos
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+        ]);
 
-        $message = new Message;
-        $message->from = Auth::user()->id;
-        $id = $message->from;
-        $message->message = $title;
-        $message->save();
+        // Crear una nueva tarea
+        $task = new Task();
+        $task->title = $request->input('title');
+        $task->description = $request->input('description');
+        $task->save();
 
-        if($task->save()) {
-            return response()->json(['status' => true, 'message' => 'Task Added Successfully']);
-        }
+        // Retornar respuesta JSON si se guarda correctamente
+        return response()->json(['status' => true, 'message' => 'Task added successfully']);
     }
 
     /**

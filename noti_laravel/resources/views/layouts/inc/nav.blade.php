@@ -1,4 +1,3 @@
-<!-- Navbar -->
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-0">
     <div class="container">
         <a href="" class="navbar-brand">{{ Str::ucfirst(Auth::user()->fname) }}</a>
@@ -13,7 +12,7 @@
             </ul>
 
 
-            <ul class="navbar-nav mr-auto">
+            {{-- <ul class="navbar-nav mr-auto">
                 @foreach($notifications as $key)
                 <li class="nav-item dropdown mr-2" id="{{ $key->id }}">
                     <a href="#" class="nav-link" data-toggle="dropdown">
@@ -25,7 +24,7 @@
                     </a>
                 </li>   
                 @endforeach 
-            </ul>
+            </ul> --}}
 
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">

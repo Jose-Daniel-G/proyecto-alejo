@@ -4,30 +4,40 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use Auth;
-use DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB; // Asegúrate de agregar esta línea
+
 
 class UserController extends Controller
 {
-    public function login() {
-        return view('pages.login');
+    public function login()
+    {
+        return view('auth.login');
+        // return view('pages.login');
     }
 
-    public function register() {
+    public function register()
+    {
         return view('pages.register');
     }
 
-    public function dashboard() {     
-        $notifications = DB::select("SELECT users.id, users.fname, users.lname, users.email, COUNT(is_read) AS unread FROM users LEFT JOIN messages ON users.id = messages.from AND messages.is_read = 0 WHERE users.id = ".Auth::id()." GROUP BY users.id, users.fname, users.lname, users.email");
-         
+    public function dashboard()
+    {
+        $notifications = DB::select("
+            SELECT users.id, users.fname, users.lname, users.email, COUNT(is_read) AS unread 
+            FROM users 
+            LEFT JOIN messages ON users.id = messages.from AND messages.is_read = 0 
+            WHERE users.id = " . Auth::id() . " 
+            GROUP BY users.id, users.fname, users.lname, users.email
+        ");
+        dd($notifications);
         return view('dashboard', compact('notifications'));
     }
-
     public function save_register(Request $request)
     {
         $user = User::where('email', $request['email'])->first();
 
-        if($user) {
+        if ($user) {
             return response()->json(['exists' => 'Email already exists']);
         } else {
             $user = new User;
@@ -42,23 +52,32 @@ class UserController extends Controller
 
 
 
-    
-    public function user_login(Request $request) {
-   
+
+    public function user_login(Request $request)
+    {
+
         if (Auth::attempt([
             'email' => $request->input('email'),
-            'password' => $request->input('password')])) {
+            'password' => $request->input('password')
+        ])) {
             $user = Auth()->user();
-                return response()->json(['success' => 'Successfully Logged In']);
- 
+            // $notifications = DB::select("
+            // SELECT users.id, users.fname, users.lname, users.email, COUNT(is_read) AS unread 
+            // FROM users LEFT JOIN messages ON users.id = messages.from AND messages.is_read = 0 
+            // WHERE users.id = " . Auth::id() . " 
+            // GROUP BY users.id, users.fname, users.lname, users.email");
+            // dd($notifications);
+            return view('dashboard');
+            // return view('dashboard', compact('notifications'));
+            // return response()->json(['success' => 'Successfully Logged In']);
         } else {
-            return response()->json(['error'=> 'Something went wrong']);
+            return response()->json(['error' => 'Something went wrong']);
         }
     }
 
-    public function logout(Request $request) {
+    public function logout(Request $request)
+    {
         Auth::logout();
         return redirect('/login');
-      }    
-
+    }
 }
